@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Admin</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+    <style>
+    * {
+        margin: 0;
+        padding: 0;
+    }
+
+    #navbar {
+        display: flex; /* or inline-flex */
+        background-color: #F45B69;
+    }
+
+    #navbar a{
+        color: white;
+        text-decoration: none; /* no underline */
+        transition: color .5s ease-in-out;
+        margin: 1em;
+        padding: .5em;
+        font-size: 1rem;
+        font-weight: 600;
+    }
+
+    #navbar a:hover {
+        color:black;
+    }
+    
+    h2 {
+        text-align: center;
+        margin-top: 2rem;
+    }
+    </style>
+</head>
+<body>
+    <script type="module">
+    import { DishesView } from './js/components/dishes-view.js';   
+    import { VisitorsView } from './js/components/visitors-view.js'; 
+
+    const app = document.getElementById('app');
+
+
+    // simple router 
+    const locationHashChanged = () => {
+        const url = location.hash.match(/#[a-z]+/gi).join();
+        switch(url) {
+            case '#visitors':
+                app.innerHTML = '';
+                app.appendChild(new VisitorsView());
+                break;
+            case '#dishes':
+                app.innerHTML = '';
+                app.appendChild(new DishesView());
+                break;
+        }
+    }
+
+    window.onhashchange = locationHashChanged;
+    </script>
+
+    <div id="navbar">
+        <a href="#visitors">Visitors</a>
+        <a href="#dishes">Dishes
+        </a>
+    </div>
+
+    <div id="app">
+        <h2>Welcome...</h2>
+    </div>
+
+</body>
+</html>

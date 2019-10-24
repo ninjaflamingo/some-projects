@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <style>
+        header {
+            position: relative;
+            min-height: 100vh;
+            text-align: center;
+            background: url('https://images.unsplash.com/photo-1414235077428-338989a2e8c0?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=750&q=80');
+            background-size: cover;
+            background-position: center;
+        }
+
+        header .container {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%,-50%);
+            color: white;
+            text-shadow: 2px 2px 4px #000000;
+        }
+
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="container">
+            <h1>Welcome</h1>
+            <button type="button" class="btn btn-dark">Browse Menu</button>
+        </div>
+    </header>
+    
+    <section id="about" class="py-5">
+        <h2 class="text-center py-5">About</h2>
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-12 col-md-12 col-lg-4">
+                    <h2 class="text-center"><i class="fa fa-credit-card-alt" aria-hidden="true"></i></h2>
+                    <p class="text-justify">
+                        Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                        Enim rem odit deleniti. Magnam, illo alias, voluptatem 
+                        tenetur minus quibusdam placeat fugit beatae ea, distinctio
+                        blanditiis temporibus debitis consequatur exercitationem voluptate.
+                    </p>
+                </div>
+                <div class="col-sm-12 col-md-12 col-lg-4">
+                    <h2 class="text-center"><i class="fa fa-cutlery" aria-hidden="true"></i></h2>
+                    <p class="text-justify">
+                        Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                        Enim rem odit deleniti. Magnam, illo alias, voluptatem 
+                        tenetur minus quibusdam placeat fugit beatae ea, distinctio
+                        blanditiis temporibus debitis consequatur exercitationem voluptate.
+                    </p>
+                </div>
+                <div class="col-sm-12 col-md-12 col-lg-4">
+                    <h2 class="text-center"><i class="fa fa-glass" aria-hidden="true"></i></h2>
+                    <p class="text-justify">
+                        Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                        Enim rem odit deleniti. Magnam, illo alias, voluptatem 
+                        tenetur minus quibusdam placeat fugit beatae ea, distinctio
+                        blanditiis temporibus debitis consequatur exercitationem voluptate.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="menu" class="py-5">
+        <h2 class="text-center py-5">Menu</h2>
+        <div class="container">
+            <div class="row"> 
+                <% dishes.forEach(function(dish){ %>
+                    <div class="col-xs-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 d-flex align-items-stretch">
+                        <div class="card mx-1 my-1 ml-1 mr-1" style="width: 18rem;">
+                            <div class="card-body">
+                                <h5 class="card-title"><%- dish.name %><span class="badge badge-dark float-right"><%- '£ ' + dish.price %></span></h5>
+                                <p class="card-text"><%- dish.description %></p>
+                                <a href="#" class="btn btn-dark" hidden><i class="fas fa-cart-plus"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                <% }); %>
+            </div>
+        </div>
+    </section>
+
+    <script
+    src="https://code.jquery.com/jquery-3.4.1.min.js"
+    integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+    crossorigin="anonymous"></script>
+    <script 
+    src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" 
+    integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" 
+    crossorigin="anonymous"></script>      
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" 
+    integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" 
+    crossorigin="anonymous"></script>
+</body>
+</html>
