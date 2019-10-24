@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+    html, body, * {
+        margin: 0;
+        padding: 0;
+    }
+    </style>
+</head>
+<body>
+    <canvas id="canvas"></canvas>
+    <script>
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+    const width = canvas.width = window.innerWidth;
+    const height = canvas.height = window.innerHeight;
+    const fl = 300;
+    ctx.translate(width/2, height/2);
+
+    class Sqr {
+        constructor(x, y, z, w, h){
+            this.x = x;
+            this.y = y;
+            this.z = z;
+            this.w = w;
+            this.h = h;
+        }
+
+        draw(){
+            let { x, y, z, w, h } = this;
+            let p = fl / (fl + z);
+            ctx.fillRect(
+                (x - w) * p,
+                (y - h) * p,
+                w * p,
+                h * p
+            );
+        }
+    }
+
+    const randomNumber = (max, min) => {
+        return Math.floor(Math.random() * max) - min;
+    }
+
+    const shapes = [];
+
+    for(var i=0; i<10000;i++){
+        shapes[i] = new Sqr(
+            randomNumber(1601, 800),
+            randomNumber(1601, 800),
+            randomNumber(10000, 0),
+            20,
+            20
+        )
+    }
+
+    const draw = () => {
+        ctx.clearRect(-width/2, -height/2, width, height);
+        for(var i=0; i<shapes.length;i++){
+            shapes[i].draw();
+            shapes[i].z += 5;
+            if(shapes[i].z > 10000){
+                shapes[i].z = 0
+            }
+        }
+        requestAnimationFrame(draw);
+    }
+
+    draw();
+    </script>
+</body>
+</html>
