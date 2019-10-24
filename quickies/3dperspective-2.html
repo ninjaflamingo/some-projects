@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+body, html{
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  background-color: lightblue;
+  overflow: hidden;
+}
+</style>
+</head>
+<body>
+  <canvas id="canvas" width="100%" height="100%"></canvas>
+  <script>
+      const WIDTH = window.innerWidth;
+      const HEIGHT = window.innerHeight;
+      const canvas = document.getElementById("canvas");
+      canvas.width = WIDTH;
+      canvas.height = HEIGHT;
+      const ctx = canvas.getContext("2d");
+      const fov = 250; // field of view
+
+      // an array of pixels with 3 dimonsional coordinates
+      // a square sheet of dots separated by 5 px
+      const pixels = [];
+      for(var x = -250; x < 250; x+=5 )
+        for(var z = -250; z < 250; z+=5)
+          pixels.push({ x: x, y: 30, z: z});
+
+      const draw = () => {
+          ctx.clearRect(0,0, WIDTH, HEIGHT);
+          // grabbing a screenshot of the canvas using getImageData
+          let imagedata = ctx.getImageData(0, 0, WIDTH, HEIGHT);
+          // looping through all pixel points
+          let i = pixels.length;
+          while(i--)
+          {
+            let pixel = pixels[i];
+              // calculate 2d position for 3d coordinates
+              // scale, the spacing of pixels will decrease as distance increases from us
+              let scale = fov/(fov + pixel.z);
+              let x2d = pixel.x * scale + WIDTH/2;
+              let y2d = pixel.y * scale + HEIGHT/2;
+              // marking the points green only if they are inside the screen
+              if(x2d >= 0 && x2d <= WIDTH && y2d >=0 && y2d <= HEIGHT)
+              {
+                  let c = (Math.round(y2d) * imagedata.width + Math.round(x2d))*4;
+                  imagedata.data[c] = 32; // red
+                  imagedata.data[c+1] = 112; // green
+                  imagedata.data[c+2] = 1; // blue
+                  imagedata.data[c+3] = 255; // alpha
+              }
+              pixel.z -= 1;
+              if(pixel.z < -fov)
+                  pixel.z += 2 * fov;
+            }
+              // putting imagedata back on canvas
+              ctx.putImageData(imagedata, 0, 0);
+      }
+      setInterval(draw, 1000/12);
+  </script>
+</body>
+</html>
