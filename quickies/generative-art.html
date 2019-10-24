@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    body, html{
+      background-color: '#222';
+      width: 100%;
+      height: 100;
+      overflow: hidden;
+      margin: 0;
+      padding: 0;
+    }
+
+    canvas {
+      background-color: black;
+      display: block;
+      position: absolute;
+      top: 0px;
+      left: 0px;
+    }
+  </style>
+</head>
+<body>
+  <canvas id="canvas"></canvas>
+  <canvas id="canvas2"></canvas>
+  <script>
+
+    const canvas = document.getElementById('canvas');
+    const canvas2 = document.getElementById('canvas2');
+    const WIDTH = canvas.width = canvas2.width = window.innerWidth;
+    const HEIGHT = canvas.height = canvas2.height = window.innerHeight;
+
+    // canvas overlay 
+    const ctx = canvas.getContext('2d');
+    const ctx2 = canvas2.getContext("2d");
+
+    ctx.fillStyle = '#222'
+    ctx.fillRect(0,0,WIDTH,HEIGHT);
+
+    class Arm {
+        constructor(x, y, l, a){
+            this.x = x;
+            this.y = y;
+            this.length = l;
+            this.angle = a;
+            this.parent = null;
+        }
+
+
+        getEndX(){
+            let angle = this.angle;
+            let parent = this.parent;
+            while(parent)
+            {
+                angle += parent.angle;
+                parent = parent.parent;
+            }
+            return this.x + Math.cos(angle) * this.length;
+        }
+
+        getEndY(){
+            let angle = this.angle;
+            let parent = this.parent;
+            while(parent)
+            {
+                angle += parent.angle;
+                parent = parent.parent;
+            }
+            return this.y + Math.sin(angle) * this.length;
+        }
+
+        render(context){
+            context.strokeStyle = "white";
+            context.lineWidth = 5;
+            context.beginPath();
+            context.moveTo(this.x, this.y);
+            context.lineTo(this.getEndX(), this.getEndY());
+            context.stroke();
+        }
+
+    }
+    (function() {
+
+        let arm = new Arm(WIDTH/2, HEIGHT / 2, 100, 0.1);
+        let arm2 = new Arm(arm.getEndX(), arm.getEndY(), 100, 1.3);
+        let arm3 = new Arm(arm2.getEndX(), arm2.getEndY(), 100, 1.3);
+        arm2.parent = arm;
+        arm3.parent = arm2;
+        let angle = 0;
+        let mcounter = 0;
+        
+        const draw = () => {
+
+            ctx2.beginPath();
+            ctx2.strokeStyle = "white";
+            ctx2.lineWidth = 0.2;
+            ctx2.moveTo(arm3.getEndX(), arm3.getEndY());
+
+            ctx.clearRect(0, 0, WIDTH, HEIGHT);
+
+            arm.angle = Math.sin(angle) *  Math.tan(angle);
+            arm2.angle = Math.cos(angle * .2) / 2;
+            arm3.angle = Math.sin(angle * .5) / .20;
+            arm2.x = arm.getEndX();
+            arm2.y = arm.getEndY();
+            arm3.x = arm2.getEndX();
+            arm3.y = arm2.getEndY();
+            angle+= 0.05
+            arm.render(ctx);
+            arm2.render(ctx);
+            arm3.render(ctx);
+            ctx2.lineTo(arm3.getEndX(), arm3.getEndY());
+                ctx2.stroke();
+            requestAnimationFrame(draw);
+        }
+
+        draw();
+    })();
+  </script>
+</body>
+</html>
