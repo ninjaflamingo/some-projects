@@ -1,0 +1,105 @@
+<html>
+    <head>
+        <style>
+        * { margin: 0; padding: 0;}
+
+        body, html { height:100%; }
+        #canvas {
+            position:absolute;
+            background-color: blue;
+            width:100%;
+            height:100%;
+        }
+        </style>
+    </head>
+    <body>
+        <script src="coordinates.js"></script>
+
+        <div id="map">
+            <canvas id="canvas"></canvas>
+        </div>
+
+        <script>
+        const WIDTH = window.innerWidth;
+        const HEIGHT = window.innerHeight;
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = WIDTH;
+        canvas.height = HEIGHT;
+
+        powerOf = (n, power) => { 
+            let initialValue = n; 
+            for(var i=0; i<power; i++){
+                n *= initialValue;
+            }
+            return n;
+        };
+
+        let equator = 0;
+        let level = 0; 
+        let mapWidth = mapHeight = 256 * powerOf(2, level); // at level 1 we have 512 x 512 pixels 
+
+        // Ground Resolution (meters / pixel) for given coordinate 
+        let latitude = equator; 
+        let groundResolution = (Math.cos(latitude * Math.PI/180) * 2 * Math.PI * 6378137) / (256 * powerOf(2, level));
+        console.log(`The ground resolution is ${groundResolution} meters per pixel at level ${level}`); // in meters per pixel 
+
+        // The map scale indicates the ratio between map distance and ground distance, when measured in the same units
+        // ie.: 1 : x, 1 : 100 000
+
+        let screenDpi = 96; 
+        let mapScale = (Math.cos(latitude * Math.PI/180) * 2 * Math.PI * 6378137 * screenDpi) / (256 * powerOf(2, level) * 0.0254);
+        console.log(`The map scale is 1 : ${mapScale} at level ${level}`);
+
+        // Convert geographic coordinates into pixel coordinates 
+        // the map width and height is different at each level, so are the pixel coordinates
+        // at level 3, the pixel coordinates range from (0, 0) to (2047, 2047)
+        // Given latitude and longitude in degrees, and the level of detail, the pixel XY coordinates can be calculated as follows:
+        latitude = 51.359903;
+        longitude = 41.330378;
+  
+        let sinLatitude = Math.sin(latitude * Math.PI/180);
+        let pixelX = ((longitude + 180) / 360) * 256 * powerOf(2, level);
+        let pixelY = (0.5 - Math.log((1 + sinLatitude) / (1 - sinLatitude)) / (4 * Math.PI)) * 256 * powerOf(2, level);
+        
+        const getPixelVals = ([lon, lat]) => {
+            let sinLat = Math.sin(lat * Math.PI/180);
+            let x = ((lon + 180) / 360) * 256 * powerOf(2, level);
+            let y = (0.5 - Math.log((1 + sinLat) / (1 - sinLat)) / (4 * Math.PI)) * 256 * powerOf(2, level);
+            return [x, y]; 
+        }
+
+        drawFeature = (featureCoords) => {
+            ctx.strokeStyle = "#FF0000";
+            ctx.font = "8px Arial";
+
+            for(var i = 0; i < featureCoords.length; i++){
+                if(i < featureCoords.length - 1){
+                    let convertedPoint = getPixelVals(featureCoords[i]);
+                    let convertedPointTo = getPixelVals(featureCoords[i+1]);
+                    ctx.beginPath();       // Start a new path
+                    ctx.moveTo(convertedPoint[0], convertedPoint[1]);    
+                    ctx.lineTo(convertedPointTo[0], convertedPointTo[1]);  
+                    ctx.stroke();          // Render the path
+                    ctx.fillText(`p ${i}`, convertedPoint[0], convertedPoint[1]);
+                }
+            }
+        }
+
+        //drawFeature(coordinates);
+        drawFeature(australia);
+        drawFeature(europe);
+        drawFeature(greatBritain);
+        drawFeature(asia);
+        drawFeature(antarctica);
+      
+        ctx.rect(0, 0, 256, 256);
+        ctx.rect(256, 0, 256, 256);
+        ctx.rect(0, 256, 256, 256);
+        ctx.rect(256, 256, 256, 256);
+        ctx.strokeStyle = "#FF0000";
+        ctx.stroke();
+
+        </script>
+    </body>
+</html>
